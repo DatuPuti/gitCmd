@@ -3,7 +3,7 @@ source gitColour.sh
 source gitFunctions.sh
 clear
 
-arrOpts=("[L]ocal" "[R]emote" "[B]oth Local and Remote")
+arrOpts=("[C]urrent" "[L]ocal" "[R]emote" "[B]oth Local and Remote")
 
 if [ ${#1} -lt 1 ]; then
     for i in "${!arrOpts[@]}"; do

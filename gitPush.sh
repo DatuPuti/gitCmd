@@ -3,7 +3,7 @@ source gitColour.sh
 source gitFunctions.sh
 clear
 
-arrOpts=("Git Push" "Git Push Upstream")
+arrOpts=("Git Push Upstream" "Git Push New Upstream")
 
 for i in "${!arrOpts[@]}"; do
     printf "$((i+1)). ${arrOpts[i]} \n"

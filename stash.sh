@@ -17,7 +17,7 @@ listSavedStashes
 
 printf "${bold}\nAvailable actions for stash:\n${clear}"
 
-arrOpts=("Restore (pop)" "Save" "Delete" "Delete All")
+arrOpts=("Restore (pop)" "Save" "Delete" "Delete All" "Just browsing, do nothing")
 for i in "${!arrOpts[@]}"; do
 	printf "$((i+1)). ${arrOpts[i]} \n"
 done
@@ -25,7 +25,7 @@ done
 printf "\n\nSelect action or ${blue}${bold}X${clear} to cancel: "
 read brNumber
 
-if [[ $brNumber == "X"  ||  $brNumber == "x" ]]; then 
+if [[ $brNumber == "X"  ||  $brNumber == "x" || $brNumber == 5 ]]; then 
     printf "\nStash command canceled by user.\n"
     exit
 fi
@@ -65,5 +65,8 @@ elif [ $brNumber == 3 ]; then # delete a specific
 	fi
 elif [ $brNumber == 4 ]; then # delete all saved stashes
 	git stash clear
+elif [ $brNumber == 5 ]; then # exit without doing anything
+    printf "\nStash command canceled by user.\n"
+    exit
 fi
 
