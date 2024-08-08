@@ -3,4 +3,6 @@ source gitColour.sh
 source gitFunctions.sh
 clear
 
-applyDevPatch "~/outcome" "./../gitDevPatch.patch"
+curDir=$(pwd)
+echo "The current directory is : $curDir"
+applyDevPatch $curDir "./../gitDevPatch.patch"
