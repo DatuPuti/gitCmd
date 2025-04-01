@@ -30,7 +30,7 @@ if [[ $brNumber == "X"  ||  $brNumber == "x" ]]; then
     exit
 elif [[ $brNumber == "M"  ||  $brNumber == "m" ]]; then 
     printf "\nChecking out the main branch.\n"
-    git checkout main
+    git switch main
     gitPullForce.sh
 elif [[ $brNumber == "B"  ||  $brNumber == "b" ]]; then 
     createBranch.sh
@@ -40,6 +40,6 @@ else
     brName=${brName##*()}
     brName=${brName%%*()}
     gitPullForce.sh
-    git checkout $brName
+    git switch $brName
     git status
 fi
