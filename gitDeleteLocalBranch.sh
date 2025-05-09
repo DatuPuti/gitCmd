@@ -45,3 +45,5 @@ elif [ $delOption == 2 ]; then
     printf "${red}${bold}Force delete:${clear} "
     git branch -D ${brName}
 fi
+
+git remote prune origin

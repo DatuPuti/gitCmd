@@ -1,0 +1,3 @@
+git gc
+git fsck
+
