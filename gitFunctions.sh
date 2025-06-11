@@ -17,6 +17,16 @@ function listLocalBranches() {
     printf "$1\n"
 }
 
+function listRemoteBranches() {
+    mapfile -t arrRemoteBranch < <(git branch -r | sed 's/^ *//')
+
+    printf "\nAvailable Remote Branches:\n"
+    for i in "${!arrRemoteBranch[@]}"; do
+        printf "$((i+1)). ${arrRemoteBranch[i]} \n"
+    done
+    printf "$1\n"
+}
+
 function getCurrentBranch()
 {
     local __resultvar=$1

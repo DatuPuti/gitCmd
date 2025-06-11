@@ -20,29 +20,25 @@ else
     brNumber=$1
 fi
 
-if [[ $brNumber == "l" || $brNumber == "L" ]]; then
-    brNumber=1
-elif [[ $brNumber == "r" || $brNumber == "R" ]]; then
-    brNumber=2
-elif [[ $brNumber == "b" || $brNumber == "B" ]]; then
-    brNumber=3
-elif [[ $brNumber == "c" || $brNumber == "c" ]]; then
-    printf "\nCurrent branch is : ${green}"
-    getCurrentBranch
-    printf "${clear}"
-else
+case "$brNumber" in 
+    [lL])
+        listLocalBranches
         exit
-fi
+        ;;
+    [rR])
+        listRemoteBranches
+        exit
+        ;;
+    [aA])
+        listLocalBranches
+        listRemoteBranches
+        exit
+        ;;
+    [cC])
+        printf "\nCurrent branch is : ${green}"
+        getCurrentBranch
+        printf "${clear}"
+        exit
+        ;;
+esac
 
-LEN=${#brNumber}
-if [ $LEN -lt 1 ]; then 
-    exit
-fi
-
-if [ $brNumber == 1 ]; then # show only local branches
-    listLocalBranches
-elif [ $brNumber == 2 ]; then # show only remote branches
-    git branch -r
-elif [ $brNumber == 3 ]; then # show local and remote branches
-    git branch -a
-fi
