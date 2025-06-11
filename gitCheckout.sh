@@ -3,43 +3,59 @@ source gitColour.sh
 source gitFunctions.sh
 clear
 
-if [ ${#1} -lt 1 ]; then
-    listLocalBranches
+# Check if a branch name is provided as a command-line argument
+if [[ -n "$1" ]]; then
+    brName="$1"
+    printf "\nChecking out branch: ${brName}\n"
 
-    printf "\n\nSelect the Git branch to checkout or"
-    printf "\n- ${green}${bold}B${clear} to create new local branch based on current branch "
-    printf "\n- ${green}${bold}M${clear} to checkout Main branch "
-    printf "\n- ${blue}${bold}X${clear} to cancel "
-    printf "\n- Selection: "
-    read brNumber
-else
-    if [[ $1 == "m" || $1 == "M" ]]; then
-        brNumber=m
-    else 
-        brNumber=x
+    # Verify the branch exists before switching
+    if git branch --list "$brName" | grep -q "$brName"; then
+        git switch "$brName" || { printf "Error: Failed to switch branch.\n"; exit 1; }
+        gitPullForce.sh
+        git status
+    else
+        printf "Error: Branch '${brName}' does not exist.\n"
+        exit 1
     fi
+else
+    # No argument provided, proceed with interactive branch selection
+    listLocalBranches "\n\nSelect the Git branch to checkout or"
+
+    printf "\n- ${green}${bold}B${clear} to create a new local branch based on the current branch"
+    printf "\n- ${green}${bold}M${clear} to checkout the main branch"
+    printf "\n- ${blue}${bold}X${clear} to cancel"
+    printf "\n- Selection: "
+    read -r brNumber
+
+    case "$brNumber" in
+        [Xx])
+            printf "\nCheckout branch canceled by user.\n"
+            exit
+            ;;
+        [Mm])
+            printf "\nChecking out the main branch.\n"
+            git switch main || { printf "Error: Failed to switch branch.\n"; exit 1; }
+            gitPullForce.sh
+            ;;
+        [Bb])
+            createBranch.sh
+            ;;
+        *)
+            # Validate input is a number and exists in arrBranch
+            if [[ "$brNumber" =~ ^[0-9]+$ ]] && ((brNumber <= ${#arrBranch[@]})); then
+                brName=${arrBranch[$((brNumber - 1))]}
+                brName=${brName##*()}
+                brName=${brName%%*()}
+
+                printf "\nChecking out branch: ${brName}\n"
+                git switch "$brName" || { printf "Error: Failed to switch branch.\n"; exit 1; }
+                gitPullForce.sh
+                git status
+            else
+                printf "Invalid selection. Please try again.\n"
+                exit 1
+            fi
+            ;;
+    esac
 fi
 
-LEN=${#brNumber}
-if [ $LEN -lt 1 ]; then
-    brNumber=X
-fi
-
-if [[ $brNumber == "X"  ||  $brNumber == "x" ]]; then 
-    printf "\nCheckout branch canceled by user.\n"
-    exit
-elif [[ $brNumber == "M"  ||  $brNumber == "m" ]]; then 
-    printf "\nChecking out the main branch.\n"
-    git switch main
-    gitPullForce.sh
-elif [[ $brNumber == "B"  ||  $brNumber == "b" ]]; then 
-    createBranch.sh
-else 
-    printf "\nChecking out branch: ${brNumber} - ${arrBranch[$((brNumber-1))]}\n" 
-    brName=${arrBranch[$((brNumber-1))]}
-    brName=${brName##*()}
-    brName=${brName%%*()}
-    gitPullForce.sh
-    git switch $brName
-    git status
-fi
