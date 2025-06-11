@@ -3,4 +3,8 @@ source gitColour.sh
 source gitFunctions.sh
 clear
 
-reverseDevPatch "~/outcome"
+listLocalBranches
+
+listRemoteBranches
+
+

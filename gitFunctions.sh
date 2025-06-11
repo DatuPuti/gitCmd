@@ -2,18 +2,29 @@
 source gitColour.sh
 clear
 
-function listLocalBranches()
-{
-    mapfile -t arrBranch < <(git branch)
 
+function listLocalBranches() {
+    mapfile -t arrBranch < <(git branch | sed 's/^ *//')
+
+    printf "\nAvailable Local Branches:\n"
     for i in "${!arrBranch[@]}"; do
-        if [[ ${arrBranch[i]} == "*"* ]]; then 
-            printf "$((i+1)).${green}${arrBranch[i]}${clear} \n"
-        else 
-            printf "$((i+1)).${arrBranch[i]} \n"
+        if [[ ${arrBranch[i]} == "*"* ]]; then
+            printf "$((i+1)). ${green}${arrBranch[i]}${clear} \n"
+        else
+            printf "$((i+1)). ${arrBranch[i]} \n"
         fi
     done
-    printf "${1}"
+    printf "$1\n"
+}
+
+function listRemoteBranches() {
+    mapfile -t arrRemoteBranch < <(git branch -r | sed 's/^ *//')
+
+    printf "\nAvailable Remote Branches:\n"
+    for i in "${!arrRemoteBranch[@]}"; do
+        printf "$((i+1)). ${arrRemoteBranch[i]} \n"
+    done
+    printf "$1\n"
 }
 
 function getCurrentBranch()
